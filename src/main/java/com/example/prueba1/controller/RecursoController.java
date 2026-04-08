@@ -3,11 +3,15 @@ package com.example.prueba1.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.prueba1.model.Recurso;
 import com.example.prueba1.service.RecursoService;
+
+import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,18 +21,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/v1/recursos")
+
 public class RecursoController {
     @Autowired
     private RecursoService recursoService;
 
     @GetMapping
-    public List<Recurso> listarRecursos() {
-        return recursoService.getRecursos();
+    public ResponseEntity<?> getRecursos() {
+        List<Recurso> lista = recursoService.getRecursos();
+        if (lista.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron Recursos");
+        }
+        return ResponseEntity.ok(lista);
     }
 
-    @PostMapping
-    public Recurso agregaRecurso(@RequestBody Recurso recurso) {
-        return recursoService.saveRecurso(recurso);
+    @PostMapping("/validacion")
+    public ResponseEntity<String> postRecurso(@Valid @RequestBody Recurso recurso) {
+        recursoService.saveRecurso(recurso);
+        return ResponseEntity.ok("Recurso agregado correctamente");
     }
 
     @GetMapping("{id}")
