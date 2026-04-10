@@ -18,7 +18,9 @@ public class RecursoRepository {
 
     public Recurso buscarxId(int id) {
         for (Recurso recurso : listaRecursos) {
-            return recurso;
+            if (recurso.getId() == id) {
+                return recurso;
+            }
         }
         return null;
     }
@@ -33,34 +35,30 @@ public class RecursoRepository {
     }
 
     public Recurso guardar(Recurso rec) {
+        if (buscarxId(rec.getId()) != null) {
+            return null;
+        }
         listaRecursos.add(rec);
         return rec;
     }
 
     public Recurso actualizar(Recurso rec) {
-        int id = 0;
-        int idPosicion = 0;
         for (int i = 0; i < listaRecursos.size(); i++) {
             if (listaRecursos.get(i).getId() == rec.getId()) {
-                id = rec.getId();
-                idPosicion = i;
+                listaRecursos.set(i, rec);
+                return rec;
             }
         }
-        Recurso rec1 = new Recurso();
-        rec1.setId(id);
-        rec1.setNombre(rec.getNombre());
-        rec1.setResponsable(rec.getResponsable());
-        rec1.setTipo(rec.getTipo());
-        rec1.setAnioCreacion(rec.getAnioCreacion());
-        listaRecursos.set(idPosicion, rec1);
-        return rec1;
+        return null;
     }
 
-    public void eliminar(int id) {
+    public boolean eliminar(int id) {
         Recurso recurso = buscarxId(id);
         if (recurso != null) {
             listaRecursos.remove(recurso);
+            return true;
         }
+        return false;
     }
 
 }

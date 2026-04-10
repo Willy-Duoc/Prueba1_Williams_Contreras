@@ -29,8 +29,7 @@ public class RecursoService {
         return recursoRepository.actualizar(recurso);
     }
 
-    public String deleteRecurso(int id) {
-        recursoRepository.eliminar(id);
-        return "Recurso eliminado del registro";
+    public boolean deleteRecurso(int id) {
+        return recursoRepository.eliminar(id);
     }
 }
